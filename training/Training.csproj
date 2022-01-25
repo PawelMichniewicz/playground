@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="config\" />
+    <Folder Include="Config\" />
   </ItemGroup>
 
 </Project>
