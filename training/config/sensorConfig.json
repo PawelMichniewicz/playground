@@ -1,0 +1,28 @@
+{
+  "Sensors": [
+    {
+      "ID": 1,
+      "Type": "speed",
+      "MinValue": 0,
+      "MaxValue": 100,
+      "EncoderType": "fixed",
+      "Frequency": 2 //Hz
+    },
+    {
+      "ID": 2,
+      "Type": "position",
+      "MinValue": -10000,
+      "MaxValue": 10000,
+      "EncoderType": "fixed",
+      "Frequency": 1 //Hz
+    },
+    {
+      "ID": 3,
+      "Type": "heading",
+      "MinValue": 0.0,
+      "MaxValue": 359.9,
+      "EncoderType": "float",
+      "Frequency": 10 //Hz
+    }
+  ]
+}
