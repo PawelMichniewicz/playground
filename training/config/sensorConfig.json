@@ -19,8 +19,8 @@
     {
       "ID": 3,
       "Type": "heading",
-      "MinValue": 0.0,
-      "MaxValue": 359.9,
+      "MinValue": 0,
+      "MaxValue": 359,
       "EncoderType": "float",
       "Frequency": 10 //Hz
     }
