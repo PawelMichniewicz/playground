@@ -36,12 +36,12 @@ namespace Training
                 string fullpath = Path + configFileName;
                 using (var fs = new FileStream(fullpath, FileMode.Open))
                 {
-                    using (var fr = new StreamReader(fs))
+                    using (var sr = new StreamReader(fs))
                     {
-                        using (var jtr = new JsonTextReader(fr))
+                        using (var jtr = new JsonTextReader(sr))
                         {
-                            var temp = JsonSerializer.CreateDefault();
-                            var result = temp.Deserialize<SensorConfig>(jtr);
+                            var serializer = JsonSerializer.CreateDefault();
+                            var result = serializer.Deserialize<SensorConfig>(jtr);
                         }
                     }
                 }
