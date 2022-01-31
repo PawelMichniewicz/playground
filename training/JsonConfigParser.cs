@@ -9,7 +9,7 @@ namespace Training
     {
         public JsonConfigParser(string path)
         {
-            this.ConfigPath = path;
+            ConfigPath = path;
         }
 
         public string ConfigPath { get;  set; }
