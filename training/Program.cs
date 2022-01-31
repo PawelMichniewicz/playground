@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Training.Interfaces;
+﻿using Training.Interfaces;
 using Training.Models;
 
 namespace Training
@@ -17,30 +15,18 @@ namespace Training
 
             RunSensors(config);
 
+            // need smarter way to wait for Tasks to be finished
             System.Threading.Thread.Sleep(11000);
 
         }
 
         private static void RunSensors(SensorConfig config)
         {
-            const int milisecs = 1000;
 
-            foreach (var sensor in config.Sensors)
+            foreach (var sensorConfig in config.Sensors)
             {
-                new Task(() =>
-                {
-                    var rest = milisecs / sensor.Frequency;
-                    var chaos = new Random();
-
-                    var endTime = DateTime.Now.AddSeconds(10);
-
-                    while (endTime > DateTime.Now)
-                    {
-                        int reading = chaos.Next(sensor.MinValue, sensor.MaxValue);
-                        Console.WriteLine($"ID: {sensor.ID}\tType: {sensor.Type}\tFreq: {sensor.Frequency} Hz\tReading: {reading}");
-                        System.Threading.Thread.Sleep(rest);
-                    }
-                }).Start();
+                var sim = new SensorSimulator(sensorConfig);
+                sim.Start();
             }
         }
     }
