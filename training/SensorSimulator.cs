@@ -9,13 +9,13 @@ namespace Training
     {
         private const int milisecs = 1000;
 
-        private Sensor sensorConfig;
+        private SensorConfig sensorConfig;
 
         private Task worker;
 
         private List<IObserver<int>> observers;
 
-        public SensorSimulator(Sensor sensorConfig)
+        public SensorSimulator(SensorConfig sensorConfig)
         {
             this.sensorConfig = sensorConfig;
             observers = new List<IObserver<int>>();

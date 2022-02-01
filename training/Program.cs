@@ -10,7 +10,7 @@ namespace Training
 
         static void Main(string[] args)
         {
-            IConfigProvider<SensorConfig> JsonConfigProvider = new JsonConfigParser<SensorConfig>(configPath + configName);
+            IConfigProvider<ConfigFile> JsonConfigProvider = new JsonConfigParser<ConfigFile>(configPath + configName);
             var config = JsonConfigProvider.LoadConfig();
 
             RunSensors(config);
@@ -20,9 +20,8 @@ namespace Training
 
         }
 
-        private static void RunSensors(SensorConfig config)
+        private static void RunSensors(ConfigFile config)
         {
-
             foreach (var sensorConfig in config.Sensors)
             {
                 var sim = new SensorSimulator(sensorConfig);

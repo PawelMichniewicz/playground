@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 
 namespace Training.Models
 {
     class SensorConfig
     {
-        public IEnumerable<Sensor> Sensors { get; set; }
+        public int ID { get; set; }
+
+        public string Type { get; set; }
+
+        public int MinValue { get; set; }
+
+        public int MaxValue { get; set; }
+
+        [JsonProperty("EncoderType")]
+        public string Encoder { get; set; }
+
+        public int Frequency { get; set; }
     }
 }
