@@ -8,16 +8,15 @@ namespace Training
     internal class SensorSimulator : IObservable<int>
     {
         private const int milisecs = 1000;
-
-        private SensorConfig sensorConfig;
-
-        private Task worker;
-
         private List<IObserver<int>> observers;
+
+        public SensorConfig SensorConfig { get; private set; }
+
+        public Task Worker { get; private set; }
 
         public SensorSimulator(SensorConfig sensorConfig)
         {
-            this.sensorConfig = sensorConfig;
+            this.SensorConfig = sensorConfig;
             observers = new List<IObserver<int>>();
             Setup();
         }
@@ -28,17 +27,17 @@ namespace Training
             return new Unsubscriber(observers, observer);
         }
 
-        public Task Start()
+        public void Start()
         {
-            worker.Start();
-            return worker;
+            Worker.Start();
+            //return worker;
         }
 
         private void Setup()
         {
-            worker = new Task(() =>
+            Worker = new Task(() =>
             {
-                var rest = milisecs / sensorConfig.Frequency;
+                var rest = milisecs / SensorConfig.Frequency;
                 var chaos = new Random();
 
                 var endTime = DateTime.Now.AddSeconds(10);
@@ -46,12 +45,13 @@ namespace Training
                 while (endTime > DateTime.Now)
                 {
                     // 1. get new reading
-                    int reading = chaos.Next(sensorConfig.MinValue, sensorConfig.MaxValue);
+                    int reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
 
                     // 2. decide on reading quality here based on new reading
+                    // to be done...
 
                     // 3. construct message string
-                    Console.WriteLine($"ID: {sensorConfig.ID}\tType: {sensorConfig.Type}\tFreq: {sensorConfig.Frequency} Hz\tReading: {reading}");
+                    //Console.WriteLine($"ID: {SensorConfig.ID}\tType: {SensorConfig.Type}\tFreq: {SensorConfig.Frequency} Hz\tReading: {reading}");
                     
                     // 4. notify all subs
                     Notify(reading);
@@ -69,6 +69,9 @@ namespace Training
                 ob.OnNext(reading);
             }
         }
+
+
+
 
         private class Unsubscriber : IDisposable
         {

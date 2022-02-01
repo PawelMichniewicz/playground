@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Training.Interfaces;
 using Training.Models;
@@ -10,20 +12,36 @@ namespace Training
         private const string configPath = @"D:\code\localRepos\playground\training\Config\";
         private const string configName = @"sensorConfig.json";
 
-        private List<Task> simulators = new List<Task>();
+        private readonly List<SensorSimulator> simulators = new();
+        private readonly List<Receiver> receivers = new();
 
         public Orchestrator() { }
 
         internal void Go()
         {
             IConfigProvider<ConfigFile> JsonConfigProvider = new JsonConfigParser<ConfigFile>(configPath + configName);
-            var config = JsonConfigProvider.LoadConfig();
+            ConfigFile config = JsonConfigProvider.LoadConfig();
 
             RunSensors(config);
 
+            // load receiver config here
+            RunReceivers();
+
             int timeout = 20000; // 20s
-            //Task.WhenAll(simulators);
-            Task.WaitAll(simulators.ToArray(), timeout);
+            // await Task.WhenAll(simulators.Select(x => x.Worker)); // <-- this needs some work
+            Task.WaitAll(simulators.Select(x => x.Worker).ToArray(), timeout);
+        }
+
+        private void RunReceivers()
+        {
+            List<int> temp = new() { 1, 2, 3 };
+
+            foreach (var id in temp)
+            {
+                var rx = new Receiver(id);
+                simulators.FirstOrDefault(x => x.SensorConfig.ID == id).Subscribe(rx);
+                receivers.Add(rx);
+            }
         }
 
         private void RunSensors(ConfigFile config)
@@ -31,7 +49,8 @@ namespace Training
             foreach (var sensorConfig in config.Sensors)
             {
                 var sim = new SensorSimulator(sensorConfig);
-                simulators.Add(sim.Start());
+                sim.Start();
+                simulators.Add(sim);
             }
         }
     }
