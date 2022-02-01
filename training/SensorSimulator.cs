@@ -5,7 +5,7 @@ using Training.Models;
 
 namespace Training
 {
-    internal class SensorSimulator : IObservable<int>, IDisposable
+    internal class SensorSimulator : IObservable<int>
     {
         private const int milisecs = 1000;
 
@@ -25,13 +25,7 @@ namespace Training
         public IDisposable Subscribe(IObserver<int> observer)
         {
             observers.Add(observer);
-            return this;
-        }
-
-        public void Dispose()
-        {
-            //unsubsribe here
-            // need to rethink this...
+            return new Unsubscriber(observers, observer);
         }
 
         // maybe return Task?
@@ -48,10 +42,18 @@ namespace Training
 
                 while (endTime > DateTime.Now)
                 {
+                    // 1. get new reading
                     int reading = chaos.Next(sensorConfig.MinValue, sensorConfig.MaxValue);
+
+                    // 2. decide on reading quality here based on new reading
+
+                    // 3. construct message string
                     Console.WriteLine($"ID: {sensorConfig.ID}\tType: {sensorConfig.Type}\tFreq: {sensorConfig.Frequency} Hz\tReading: {reading}");
-                    // notify all subs
+                    
+                    // 4. notify all subs
                     Notify(reading);
+
+                    // 5. wait to be inline with reading frequency
                     System.Threading.Thread.Sleep(rest);
                 }
             });
@@ -62,6 +64,26 @@ namespace Training
             foreach (var ob in observers)
             {
                 ob.OnNext(reading);
+            }
+        }
+
+        private class Unsubscriber : IDisposable
+        {
+            private List<IObserver<int>> observers;
+            private IObserver<int> observer;
+
+            public Unsubscriber(List<IObserver<int>> observers, IObserver<int> observer)
+            {
+                this.observers = observers;
+                this.observer = observer;
+            }
+
+            public void Dispose()
+            {
+                if (observer != null && observers.Contains(observer))
+                {
+                    observers.Remove(observer);
+                }
             }
         }
     }
