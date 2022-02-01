@@ -28,8 +28,11 @@ namespace Training
             return new Unsubscriber(observers, observer);
         }
 
-        // maybe return Task?
-        public void Start() => worker.Start();
+        public Task Start()
+        {
+            worker.Start();
+            return worker;
+        }
 
         private void Setup()
         {

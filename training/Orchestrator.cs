@@ -1,4 +1,6 @@
-﻿using Training.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Training.Interfaces;
 using Training.Models;
 
 namespace Training
@@ -8,9 +10,9 @@ namespace Training
         private const string configPath = @"D:\code\localRepos\playground\training\Config\";
         private const string configName = @"sensorConfig.json";
 
-        public Orchestrator()
-        {
-        }
+        private List<Task> simulators = new List<Task>();
+
+        public Orchestrator() { }
 
         internal void Go()
         {
@@ -19,8 +21,9 @@ namespace Training
 
             RunSensors(config);
 
-            // need smarter way to wait for Tasks to be finished
-            System.Threading.Thread.Sleep(11000);
+            int timeout = 20000; // 20s
+            //Task.WhenAll(simulators);
+            Task.WaitAll(simulators.ToArray(), timeout);
         }
 
         private void RunSensors(ConfigFile config)
@@ -28,7 +31,7 @@ namespace Training
             foreach (var sensorConfig in config.Sensors)
             {
                 var sim = new SensorSimulator(sensorConfig);
-                sim.Start();
+                simulators.Add(sim.Start());
             }
         }
     }
