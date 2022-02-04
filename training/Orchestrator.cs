@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Training.Interfaces;
@@ -9,7 +8,7 @@ namespace Training
 {
     internal class Orchestrator
     {
-        private const string configPath = @"D:\code\localRepos\playground\training\Config\";
+        private const string configPath = @".\..\..\..\Config\";
         private const string configName = @"sensorConfig.json";
 
         private readonly List<SensorSimulator> simulators = new();
