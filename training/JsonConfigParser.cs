@@ -7,26 +7,26 @@ namespace Training
 {
     class JsonConfigParser<T> : IConfigProvider<T>
     {
+        private readonly string configPath;
+
         public JsonConfigParser(string path)
         {
-            ConfigPath = path;
+            configPath = path;
         }
 
-        public string ConfigPath { get;  set; }
-        
         public T LoadConfig()
         {
             // if file not exists throw
-            if (string.IsNullOrWhiteSpace(ConfigPath))
+            if (string.IsNullOrWhiteSpace(configPath))
             {
-                throw new ArgumentNullException($"Cannot parse config file: {ConfigPath}");
+                throw new ArgumentNullException($"Cannot parse config file: {configPath}");
             }
 
             T result = default;
 
             try
             {
-                using (var fs = new FileStream(ConfigPath, FileMode.Open))
+                using (var fs = new FileStream(configPath, FileMode.Open))
                 {
                     using (var sr = new StreamReader(fs))
                     {

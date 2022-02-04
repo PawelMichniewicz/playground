@@ -17,12 +17,12 @@ namespace Training
 
         public void OnCompleted()
         {
-            throw new NotImplementedException();
+            UnsubscribeMe();
         }
 
         public void OnError(Exception error)
         {
-            throw new NotImplementedException();
+            UnsubscribeMe();
         }
 
         public void OnNext(int value)

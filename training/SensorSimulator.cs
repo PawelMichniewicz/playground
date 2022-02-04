@@ -8,7 +8,7 @@ namespace Training
     internal class SensorSimulator : IObservable<int>
     {
         private const int milisecs = 1000;
-        private List<IObserver<int>> observers;
+        private readonly List<IObserver<int>> observers;
 
         public SensorConfig SensorConfig { get; private set; }
 
@@ -37,22 +37,25 @@ namespace Training
         {
             Worker = new Task(() =>
             {
-                var rest = milisecs / SensorConfig.Frequency;
-                var chaos = new Random();
+                int rest = milisecs / SensorConfig.Frequency;
+                int reading;
+                Random chaos = new();
+                QualityClassifier classifier = new(SensorConfig.MinValue, SensorConfig.MaxValue);
+                QualityClassifier.ReadingQuality quality;
 
-                var endTime = DateTime.Now.AddSeconds(10);
+                DateTime endTime = DateTime.Now.AddSeconds(10);
 
                 while (endTime > DateTime.Now)
                 {
                     // 1. get new reading
-                    int reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
+                    reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
 
-                    // 2. decide on reading quality here based on new reading
-                    // to be done...
+                    // 2. decide on reading quality based on new reading
+                    quality = classifier.Clasify(reading);
 
-                    // 3. construct message string
+                    // 3. encode new telegram
                     //Console.WriteLine($"ID: {SensorConfig.ID}\tType: {SensorConfig.Type}\tFreq: {SensorConfig.Frequency} Hz\tReading: {reading}");
-                    
+
                     // 4. notify all subs
                     Notify(reading);
 

@@ -9,7 +9,7 @@ namespace Training
     internal class Orchestrator
     {
         private const string configPath = @".\..\..\..\Config\";
-        private const string configName = @"sensorConfig.json";
+        private const string sensorConfigFileName = @"sensorConfig.json";
 
         private readonly List<SensorSimulator> simulators = new();
         private readonly List<Receiver> receivers = new();
@@ -18,7 +18,7 @@ namespace Training
 
         internal void Go()
         {
-            IConfigProvider<ConfigFile> JsonConfigProvider = new JsonConfigParser<ConfigFile>(configPath + configName);
+            IConfigProvider<ConfigFile> JsonConfigProvider = new JsonConfigParser<ConfigFile>(configPath + sensorConfigFileName);
             ConfigFile config = JsonConfigProvider.LoadConfig();
 
             RunSensors(config);
@@ -29,16 +29,26 @@ namespace Training
             int timeout = 20000; // 20s
             // await Task.WhenAll(simulators.Select(x => x.Worker)); // <-- this needs some work
             Task.WaitAll(simulators.Select(x => x.Worker).ToArray(), timeout);
+
+            UnsubscribeReceivers();
+        }
+
+        private void UnsubscribeReceivers()
+        {
+            foreach (var rx in receivers)
+            {
+                rx.UnsubscribeMe();
+            }
         }
 
         private void RunReceivers()
         {
-            List<int> temp = new() { 1, 2, 3 };
+            List<int> temp = new() { 1/*, 2, 3 */};
 
             foreach (var id in temp)
             {
                 var rx = new Receiver(id);
-                simulators.FirstOrDefault(x => x.SensorConfig.ID == id).Subscribe(rx);
+                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id).Subscribe(rx);
                 receivers.Add(rx);
             }
         }
