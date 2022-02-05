@@ -48,7 +48,7 @@ namespace Training
             foreach (var id in temp)
             {
                 var rx = new Receiver(id);
-                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id).Subscribe(rx);
+                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id)?.Subscribe(rx);
                 receivers.Add(rx);
             }
         }

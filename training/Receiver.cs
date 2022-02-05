@@ -2,7 +2,7 @@
 
 namespace Training
 {
-    internal class Receiver : IObserver<int>
+    internal class Receiver : IObserver<string>
     {
         private readonly int id;
 
@@ -25,7 +25,7 @@ namespace Training
             UnsubscribeMe();
         }
 
-        public void OnNext(int value)
+        public void OnNext(string value)
         {
             Console.WriteLine($"Receiver #{id} got value: {value}");
         }

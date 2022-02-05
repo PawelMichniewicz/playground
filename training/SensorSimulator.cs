@@ -5,10 +5,10 @@ using Training.Models;
 
 namespace Training
 {
-    internal class SensorSimulator : IObservable<int>
+    internal class SensorSimulator : IObservable<string>
     {
         private const int milisecs = 1000;
-        private readonly List<IObserver<int>> observers;
+        private readonly List<IObserver<string>> observers;
 
         public SensorConfig SensorConfig { get; private set; }
 
@@ -17,14 +17,14 @@ namespace Training
         public SensorSimulator(SensorConfig sensorConfig)
         {
             this.SensorConfig = sensorConfig;
-            observers = new List<IObserver<int>>();
+            observers = new List<IObserver<string>>();
             Setup();
         }
 
-        public IDisposable Subscribe(IObserver<int> observer)
+        public IDisposable Subscribe(IObserver<string> observer)
         {
             observers.Add(observer);
-            return new Unsubscriber(observers, observer);
+            return new Unsubscriber<string>(observers, observer);
         }
 
         public void Start()
@@ -39,9 +39,11 @@ namespace Training
             {
                 int rest = milisecs / SensorConfig.Frequency;
                 int reading;
+                string telegram = string.Empty;
                 Random chaos = new();
                 QualityClassifier classifier = new(SensorConfig.MinValue, SensorConfig.MaxValue);
                 QualityClassifier.ReadingQuality quality;
+                TelegramEncoder encoder = new(SensorConfig);
 
                 DateTime endTime = DateTime.Now.AddSeconds(10);
 
@@ -50,38 +52,40 @@ namespace Training
                     // 1. get new reading
                     reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
 
-                    // 2. decide on reading quality based on new reading
+                    // 2. decide quality based on new reading
                     quality = classifier.Clasify(reading);
 
                     // 3. encode new telegram
-                    //Console.WriteLine($"ID: {SensorConfig.ID}\tType: {SensorConfig.Type}\tFreq: {SensorConfig.Frequency} Hz\tReading: {reading}");
+                    telegram = encoder.Encode(reading, quality);
 
                     // 4. notify all subs
-                    Notify(reading);
+                    Notify(telegram);
 
                     // 5. wait to be inline with reading frequency
                     System.Threading.Thread.Sleep(rest);
                 }
+
+                // notify complete()
             });
         }
 
-        private void Notify(int reading)
+        private void Notify(string telegram)
         {
             foreach (var ob in observers)
             {
-                ob.OnNext(reading);
+                ob.OnNext(telegram);
             }
         }
 
 
 
 
-        private class Unsubscriber : IDisposable
+        private class Unsubscriber<T> : IDisposable
         {
-            private List<IObserver<int>> observers;
-            private IObserver<int> observer;
+            private readonly List<IObserver<T>> observers;
+            private readonly IObserver<T> observer;
 
-            public Unsubscriber(List<IObserver<int>> observers, IObserver<int> observer)
+            public Unsubscriber(List<IObserver<T>> observers, IObserver<T> observer)
             {
                 this.observers = observers;
                 this.observer = observer;
