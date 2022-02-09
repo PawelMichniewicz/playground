@@ -66,7 +66,16 @@ namespace Training
                 }
 
                 // notify complete()
+                //Complete();
             });
+        }
+
+        private void Complete()
+        {
+            foreach (var ob in observers)
+            {
+                ob.OnCompleted();
+            }
         }
 
         private void Notify(string telegram)

@@ -27,7 +27,7 @@ namespace Training
 
         public void OnNext(string value)
         {
-            Console.WriteLine($"Receiver #{id} got value: {value}");
+            Console.WriteLine($"Receiver #{id} got telegram: {value}");
         }
     }
 }

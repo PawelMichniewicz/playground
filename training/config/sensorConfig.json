@@ -3,7 +3,7 @@
     {
       "ID": 1,
       "Type": "speed",
-      "MinValue": 0,
+      "MinValue": -10,
       "MaxValue": 100,
       "EncoderType": "fixed",
       "Frequency": 2 //Hz
@@ -18,11 +18,19 @@
     },
     {
       "ID": 3,
-      "Type": "heading",
+      "Type": "depth",
       "MinValue": 0,
-      "MaxValue": 359,
-      "EncoderType": "float",
+      "MaxValue": 255,
+      "EncoderType": "fixed",
       "Frequency": 10 //Hz
-    }
+    } //,
+    //{
+    //  "ID": 4,
+    //  "Type": "heading",
+    //  "MinValue": 0.0,
+    //  "MaxValue": 359.9,
+    //  "EncoderType": "float",
+    //  "Frequency": 5 //Hz
+    //}
   ]
 }

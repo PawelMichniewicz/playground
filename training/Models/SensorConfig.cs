@@ -2,7 +2,7 @@
 
 namespace Training.Models
 {
-    class SensorConfig
+    public class SensorConfig
     {
         public int ID { get; set; }
 

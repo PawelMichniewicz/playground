@@ -2,7 +2,7 @@
 
 namespace Training.Models
 {
-    class ConfigFile
+    public class SensorConfigFile
     {
         public IEnumerable<SensorConfig> Sensors { get; set; }
     }

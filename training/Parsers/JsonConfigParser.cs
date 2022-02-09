@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Training.Interfaces;
 
-namespace Training
+namespace Training.Parsers
 {
     class JsonConfigParser<T> : IConfigProvider<T>
     {
@@ -26,17 +26,12 @@ namespace Training
 
             try
             {
-                using (var fs = new FileStream(configPath, FileMode.Open))
-                {
-                    using (var sr = new StreamReader(fs))
-                    {
-                        using (var jtr = new JsonTextReader(sr))
-                        {
-                            var serializer = JsonSerializer.CreateDefault();
-                            result = serializer.Deserialize<T>(jtr);
-                        }
-                    }
-                }
+                using FileStream fs = new(configPath, FileMode.Open);
+                using StreamReader sr = new(fs);
+                using JsonTextReader jtr = new(sr);
+
+                var serializer = JsonSerializer.CreateDefault();
+                result = serializer.Deserialize<T>(jtr);
             }
             catch (Exception ex)
             {

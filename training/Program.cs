@@ -1,10 +1,14 @@
-﻿namespace Training
+﻿using System.Threading.Tasks;
+
+namespace Training
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            new Orchestrator().Go();
+            ConfigurationManager configMgr = new();
+
+            await new Orchestrator(configMgr.SensorConfig, configMgr.ReceiverConfig).Go();
         }
     }
 }

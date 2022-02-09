@@ -8,27 +8,25 @@ namespace Training
 {
     internal class Orchestrator
     {
-        private const string configPath = @".\..\..\..\Config\";
-        private const string sensorConfigFileName = @"sensorConfig.json";
-
         private readonly List<SensorSimulator> simulators = new();
         private readonly List<Receiver> receivers = new();
 
-        public Orchestrator() { }
+        private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
+        private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
 
-        internal void Go()
+        public Orchestrator(IConfigProvider<SensorConfigFile> simConfig, IConfigProvider<ReceiverConfigFile> rxConfig)
         {
-            IConfigProvider<ConfigFile> JsonConfigProvider = new JsonConfigParser<ConfigFile>(configPath + sensorConfigFileName);
-            ConfigFile config = JsonConfigProvider.LoadConfig();
+            simulatorConfig = simConfig;
+            receiverConfig = rxConfig;
+        }
 
-            RunSensors(config);
+        public async Task Go()
+        {
+            RunSensors(simulatorConfig.LoadConfig());
+            
+            RunReceivers(receiverConfig.LoadConfig());
 
-            // load receiver config here
-            RunReceivers();
-
-            int timeout = 20000; // 20s
-            // await Task.WhenAll(simulators.Select(x => x.Worker)); // <-- this needs some work
-            Task.WaitAll(simulators.Select(x => x.Worker).ToArray(), timeout);
+            await Task.WhenAll(simulators.Select(x => x.Worker));
 
             UnsubscribeReceivers();
         }
@@ -41,25 +39,23 @@ namespace Training
             }
         }
 
-        private void RunReceivers()
-        {
-            List<int> temp = new() { 1/*, 2, 3 */};
-
-            foreach (var id in temp)
-            {
-                var rx = new Receiver(id);
-                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id)?.Subscribe(rx);
-                receivers.Add(rx);
-            }
-        }
-
-        private void RunSensors(ConfigFile config)
+        private void RunSensors(SensorConfigFile config)
         {
             foreach (var sensorConfig in config.Sensors)
             {
                 var sim = new SensorSimulator(sensorConfig);
                 sim.Start();
                 simulators.Add(sim);
+            }
+        }
+        
+        private void RunReceivers(ReceiverConfigFile config)
+        {
+            foreach (var id in config.Receivers)
+            {
+                var rx = new Receiver(id);
+                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id)?.Subscribe(rx);
+                receivers.Add(rx);
             }
         }
     }
