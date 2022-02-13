@@ -6,7 +6,7 @@ namespace Training.Models
     {
         public ReceiverConfigFile()
         {
-            Receivers = new List<int> { 1/*, 2, 3 */};
+            Receivers = new List<int> { 1, 2, 3 };
         }
 
         public IEnumerable<int> Receivers { get; set; }

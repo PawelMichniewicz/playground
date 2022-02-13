@@ -18,7 +18,6 @@ namespace Training
         {
             this.SensorConfig = sensorConfig;
             observers = new List<IObserver<string>>();
-            Setup();
         }
 
         public IDisposable Subscribe(IObserver<string> observer)
@@ -29,45 +28,40 @@ namespace Training
 
         public void Start()
         {
-            Worker.Start();
-            //return worker;
+            (Worker ??= new Task(SimulationLoop)).Start();
         }
 
-        private void Setup()
+        private void SimulationLoop()
         {
-            Worker = new Task(() =>
+            int rest = milisecs / SensorConfig.Frequency;
+            int reading;
+            Random chaos = new();
+            QualityClassifier classifier = new(SensorConfig.MinValue, SensorConfig.MaxValue);
+            QualityClassifier.ReadingQuality quality;
+            TelegramEncoder encoder = new(SensorConfig);
+
+            DateTime endTime = DateTime.Now.AddSeconds(10);
+
+            while (endTime > DateTime.Now)
             {
-                int rest = milisecs / SensorConfig.Frequency;
-                int reading;
-                string telegram = string.Empty;
-                Random chaos = new();
-                QualityClassifier classifier = new(SensorConfig.MinValue, SensorConfig.MaxValue);
-                QualityClassifier.ReadingQuality quality;
-                TelegramEncoder encoder = new(SensorConfig);
+                // 1. get new reading
+                reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
 
-                DateTime endTime = DateTime.Now.AddSeconds(10);
+                // 2. decide quality based on new reading
+                quality = classifier.Clasify(reading);
 
-                while (endTime > DateTime.Now)
-                {
-                    // 1. get new reading
-                    reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
+                // 3. encode new telegram
+                string telegram = encoder.Encode(reading, quality);
 
-                    // 2. decide quality based on new reading
-                    quality = classifier.Clasify(reading);
+                // 4. notify all subs
+                Notify(telegram);
 
-                    // 3. encode new telegram
-                    telegram = encoder.Encode(reading, quality);
+                // 5. wait to be inline with reading frequency
+                System.Threading.Thread.Sleep(rest);
+            }
 
-                    // 4. notify all subs
-                    Notify(telegram);
-
-                    // 5. wait to be inline with reading frequency
-                    System.Threading.Thread.Sleep(rest);
-                }
-
-                // notify complete()
-                //Complete();
-            });
+            // notify complete()
+            //Complete();
         }
 
         private void Complete()

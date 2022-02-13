@@ -27,6 +27,7 @@ namespace Training
 
         public void OnNext(string value)
         {
+            TelegramDecoder decoder = new(value);
             Console.WriteLine($"Receiver #{id} got telegram: {value}");
         }
     }
