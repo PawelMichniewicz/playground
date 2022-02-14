@@ -1,8 +1,9 @@
 ﻿using System;
+using Training.Models;
 
 namespace Training
 {
-    internal class QualityClassifier
+    public partial class QualityClassifier
     {
         private readonly int leftAlarmBreakpoint;
         private readonly int rightAlarmBreakpoint;
@@ -32,13 +33,6 @@ namespace Training
             }
 
             return result;
-        }
-
-        public enum ReadingQuality
-        {
-            Normal,
-            Warning,
-            Alarm
         }
     }
 }

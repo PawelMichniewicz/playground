@@ -14,10 +14,16 @@ namespace Training
         private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
         private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
 
+        private readonly IEncoder<Telegram> encoder;
+        private readonly IDecoder<Telegram> decoder;
+
         public Orchestrator(IConfigProvider<SensorConfigFile> simConfig, IConfigProvider<ReceiverConfigFile> rxConfig)
         {
             simulatorConfig = simConfig;
             receiverConfig = rxConfig;
+
+            encoder = new TelegramEncoder();
+            decoder = new TelegramDecoder();
         }
 
         public async Task Go()
@@ -43,7 +49,7 @@ namespace Training
         {
             foreach (var sensorConfig in config.Sensors)
             {
-                var sim = new SensorSimulator(sensorConfig);
+                SensorSimulator sim = new(sensorConfig, encoder);
                 sim.Start();
                 simulators.Add(sim);
             }
@@ -53,7 +59,7 @@ namespace Training
         {
             foreach (var id in config.Receivers)
             {
-                var rx = new Receiver(id);
+                Receiver rx = new(id, decoder);
                 rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id)?.Subscribe(rx);
                 receivers.Add(rx);
             }

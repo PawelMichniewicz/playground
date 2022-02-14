@@ -1,19 +1,17 @@
-﻿using Training.Models;
+﻿using Training.Interfaces;
+using Training.Models;
 
 namespace Training
 {
-    internal class TelegramEncoder
+    public class TelegramEncoder : IEncoder<Telegram>
     {
-        private readonly SensorConfig config;
-
-        public TelegramEncoder(SensorConfig sensorConfig)
+        public TelegramEncoder()
         {
-            config = sensorConfig;
         }
 
-        public string Encode(int reading, QualityClassifier.ReadingQuality quality)
+        public string Encode(Telegram telegram)
         {
-            return $"$FIX,{config.ID},{config.Type},{reading},{quality}*";
+            return $"$FIX,{telegram.ID},{telegram.Type},{telegram.Reading},{telegram.Quality}*";
         }
     }
 }
