@@ -6,7 +6,7 @@ using Training.Models;
 
 namespace Training
 {
-    internal class Orchestrator
+    public class Orchestrator
     {
         private readonly List<SensorSimulator> simulators = new();
         private readonly List<Receiver> receivers = new();
@@ -28,9 +28,9 @@ namespace Training
 
         public async Task Go()
         {
-            RunSensors(simulatorConfig.LoadConfig());
-            
-            RunReceivers(receiverConfig.LoadConfig());
+            RunSensors();
+
+            RunReceivers();
 
             await Task.WhenAll(simulators.Select(x => x.Worker));
 
@@ -45,8 +45,9 @@ namespace Training
             }
         }
 
-        private void RunSensors(SensorConfigFile config)
+        private void RunSensors()
         {
+            var config = simulatorConfig.LoadConfig();
             foreach (var sensorConfig in config.Sensors)
             {
                 SensorSimulator sim = new(sensorConfig, encoder);
@@ -54,14 +55,18 @@ namespace Training
                 simulators.Add(sim);
             }
         }
-        
-        private void RunReceivers(ReceiverConfigFile config)
+
+        private void RunReceivers()
         {
-            foreach (var id in config.Receivers)
+            var config = receiverConfig.LoadConfig();
+            foreach (var recConfig in config.Receivers)
             {
-                Receiver rx = new(id, decoder);
-                rx.Unsubscriber = simulators.FirstOrDefault(x => x.SensorConfig.ID == id)?.Subscribe(rx);
-                receivers.Add(rx);
+                if (recConfig.Enabled)
+                {
+                    Receiver rx = new(recConfig, decoder);
+                    rx.Unsubscriber = simulators.FirstOrDefault(x => x.Config.ID == recConfig.SimulatorID)?.Subscribe(rx);
+                    receivers.Add(rx);
+                }
             }
         }
     }

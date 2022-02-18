@@ -3,7 +3,7 @@ using Training.Models;
 
 namespace Training
 {
-    public partial class QualityClassifier
+    public class QualityClassifier
     {
         private readonly int leftAlarmBreakpoint;
         private readonly int rightAlarmBreakpoint;
@@ -21,7 +21,6 @@ namespace Training
 
         public ReadingQuality Clasify(int reading)
         {
-
             ReadingQuality result = ReadingQuality.Normal;
             if (reading < leftWarningBreakpoint || reading > rightWarningBreakpoint)
             {

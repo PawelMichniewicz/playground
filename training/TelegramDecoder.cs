@@ -4,10 +4,9 @@ using Training.Models;
 
 namespace Training
 {
-    internal class TelegramDecoder : IDecoder<Telegram>
+    public class TelegramDecoder : IDecoder<Telegram>
     {
-        public TelegramDecoder()
-        { }
+        public TelegramDecoder() { }
 
         public Telegram Decode(string input)
         {

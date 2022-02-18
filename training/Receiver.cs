@@ -4,16 +4,16 @@ using Training.Models;
 
 namespace Training
 {
-    internal class Receiver : IObserver<string>
+    public class Receiver : IObserver<string>
     {
-        private readonly int id;
         private readonly IDecoder<Telegram> decoder;
+        private readonly ReceiverConfig config;
 
         public IDisposable Unsubscriber { get; set; }
 
-        public Receiver(int id, IDecoder<Telegram> decoder)
+        public Receiver(ReceiverConfig config, IDecoder<Telegram> decoder)
         {
-            this.id = id;
+            this.config = config;
             this.decoder = decoder;
         }
 
@@ -32,7 +32,7 @@ namespace Training
         public void OnNext(string value)
         {
             Telegram telegram = decoder.Decode(value);
-            Console.WriteLine($"Receiver #{id} got telegram:\tID: {telegram.ID}\ttype: {telegram.Type}\treading: {telegram.Reading}\tquality: {telegram.Quality}");
+            Console.WriteLine($"Receiver #{config.ID} got telegram:\tID: {telegram.ID}\ttype: {telegram.Type}\treading: {telegram.Reading}\tquality: {telegram.Quality}");
         }
     }
 }

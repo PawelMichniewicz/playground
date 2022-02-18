@@ -8,15 +8,16 @@ namespace Training
     {
         private const string configPath = @".\..\..\..\Config\";
         private const string sensorConfigFileName = @"sensorConfig.json";
-        private const string receiverConfigFileName = @"receiverConfig.txt";
+        private const string receiverConfigFileName = @"receiverConfig.json";
 
         public IConfigProvider<SensorConfigFile> SensorConfig { get; private set; }
         public IConfigProvider<ReceiverConfigFile> ReceiverConfig { get; private set; }
 
         public ConfigurationManager()
         {
+            //System.Environment.GetEnvironmentVariable()
             SensorConfig = new JsonConfigParser<SensorConfigFile>(configPath + sensorConfigFileName);
-            ReceiverConfig = new TextConfigParser<ReceiverConfigFile>(configPath + receiverConfigFileName);
+            ReceiverConfig = new JsonConfigParser<ReceiverConfigFile>(configPath + receiverConfigFileName);
         }
     }
 }

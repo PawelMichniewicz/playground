@@ -4,7 +4,7 @@ namespace Training
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             ConfigurationManager configMgr = new();
 

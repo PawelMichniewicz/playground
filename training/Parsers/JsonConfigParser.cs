@@ -5,7 +5,7 @@ using Training.Interfaces;
 
 namespace Training.Parsers
 {
-    class JsonConfigParser<T> : IConfigProvider<T>
+    public class JsonConfigParser<T> : IConfigProvider<T>
     {
         private readonly string configPath;
 
@@ -16,7 +16,6 @@ namespace Training.Parsers
 
         public T LoadConfig()
         {
-            // if file not exists throw
             if (string.IsNullOrWhiteSpace(configPath))
             {
                 throw new ArgumentNullException($"Cannot parse config file: {configPath}");

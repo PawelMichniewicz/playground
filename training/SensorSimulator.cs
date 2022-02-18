@@ -6,21 +6,21 @@ using Training.Models;
 
 namespace Training
 {
-    internal class SensorSimulator : IObservable<string>
+    public class SensorSimulator : IObservable<string>
     {
         private const int milisecs = 1000;
         private const int simulationTime = 10; // seconds
         private readonly List<IObserver<string>> observers;
         private readonly IEncoder<Telegram> encoder;
 
-        public SensorConfig SensorConfig { get; private set; }
+        public SensorConfig Config { get; set; }
 
         public Task Worker { get; private set; }
 
-        public SensorSimulator(SensorConfig sensorConfig, IEncoder<Telegram> encoder)
+        public SensorSimulator(SensorConfig config, IEncoder<Telegram> encoder)
         {
-            this.SensorConfig = sensorConfig;
             this.encoder = encoder;
+            Config = config;
             observers = new List<IObserver<string>>();
         }
 
@@ -37,18 +37,18 @@ namespace Training
 
         private void SimulationLoop()
         {
-            int rest = milisecs / SensorConfig.Frequency;
+            int rest = milisecs / Config.Frequency;
 
             Random chaos = new();
-            Telegram telegram = new() { ID = SensorConfig.ID, Type = SensorConfig.Type };
-            QualityClassifier classifier = new(SensorConfig.MinValue, SensorConfig.MaxValue);
+            Telegram telegram = new() { ID = Config.ID, Type = Config.Type };
+            QualityClassifier classifier = new(Config.MinValue, Config.MaxValue);
 
-            DateTime endTime = DateTime.Now.AddSeconds(simulationTime);
+            DateTime end = DateTime.Now.AddSeconds(simulationTime);
 
-            while (endTime.TimeOfDay > DateTime.Now.TimeOfDay)
+            while (end.TimeOfDay > DateTime.Now.TimeOfDay)
             {
                 // 1. get new reading
-                telegram.Reading = chaos.Next(SensorConfig.MinValue, SensorConfig.MaxValue);
+                telegram.Reading = chaos.Next(Config.MinValue, Config.MaxValue);
 
                 // 2. decide quality based on new reading
                 telegram.Quality = classifier.Clasify(telegram.Reading);

@@ -5,9 +5,7 @@ namespace Training
 {
     public class TelegramEncoder : IEncoder<Telegram>
     {
-        public TelegramEncoder()
-        {
-        }
+        public TelegramEncoder() { }
 
         public string Encode(Telegram telegram)
         {

@@ -4,11 +4,8 @@ namespace Training.Models
 {
     public class ReceiverConfigFile
     {
-        public ReceiverConfigFile()
-        {
-            Receivers = new List<int> { 1, 2, 3 };
-        }
+        public ReceiverConfigFile() { }
 
-        public IEnumerable<int> Receivers { get; set; }
+        public IEnumerable<ReceiverConfig> Receivers { get; set; }
     }
 }
