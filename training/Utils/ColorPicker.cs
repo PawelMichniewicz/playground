@@ -1,7 +1,7 @@
 ﻿using System;
 using Training.Models;
 
-namespace Training
+namespace Training.Utils
 {
     public static class ColorPicker
     {

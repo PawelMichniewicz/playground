@@ -2,7 +2,7 @@
 using Training.Models;
 using Training.Parsers;
 
-namespace Training
+namespace Training.Utils
 {
     public class ConfigurationManager
     {
