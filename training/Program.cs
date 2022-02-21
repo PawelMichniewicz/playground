@@ -2,9 +2,9 @@
 
 namespace Training
 {
-    class Program
+    public class Program
     {
-        static async Task Main()
+        public static async Task Main()
         {
             ConfigurationManager configMgr = new();
 

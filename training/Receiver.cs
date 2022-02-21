@@ -32,7 +32,10 @@ namespace Training
         public void OnNext(string value)
         {
             Telegram telegram = decoder.Decode(value);
+    
+            Console.ForegroundColor = ColorPicker.ColorFromQuality(telegram.Quality);
             Console.WriteLine($"Receiver #{config.ID} got telegram:\tID: {telegram.ID}\ttype: {telegram.Type}\treading: {telegram.Reading}\tquality: {telegram.Quality}");
+            Console.ForegroundColor = ColorPicker.DefaultColor;
         }
     }
 }

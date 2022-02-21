@@ -2,8 +2,6 @@
 {
     public class ReceiverConfig
     {
-        public ReceiverConfig() { }
-
         public int ID { get; set; }
 
         public int SimulatorID { get; set; }

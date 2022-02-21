@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Training.Interfaces;
@@ -28,13 +30,24 @@ namespace Training
 
         public async Task Go()
         {
-            RunSensors();
+            try
+            {
+                RunSensors();
 
-            RunReceivers();
+                RunReceivers();
 
-            await Task.WhenAll(simulators.Select(x => x.Worker));
+                await Task.WhenAll(simulators.Select(x => x.Worker));
 
-            UnsubscribeReceivers();
+                UnsubscribeReceivers();
+            }
+            catch (FileLoadException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Operation failed unexpectedly! Message: {ex.Message}.");
+            }
         }
 
         private void UnsubscribeReceivers()

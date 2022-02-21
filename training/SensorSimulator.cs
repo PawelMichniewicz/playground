@@ -50,10 +50,10 @@ namespace Training
                 // 1. get new reading
                 telegram.Reading = chaos.Next(Config.MinValue, Config.MaxValue);
 
-                // 2. decide quality based on new reading
+                // 2. decide quality
                 telegram.Quality = classifier.Clasify(telegram.Reading);
 
-                // 3. encode new telegram
+                // 3. encode telegram
                 string encoded = encoder.Encode(telegram);
 
                 // 4. notify all subs

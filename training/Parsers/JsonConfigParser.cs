@@ -1,43 +1,48 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Training.Interfaces;
 
 namespace Training.Parsers
 {
-    public class JsonConfigParser<T> : IConfigProvider<T>
+    public class JsonConfigParser<T> : IConfigProvider<T> where T : class
     {
         private readonly string configPath;
+        private T config;
 
         public JsonConfigParser(string path)
         {
             configPath = path;
+            config = null;
         }
 
         public T LoadConfig()
         {
-            if (string.IsNullOrWhiteSpace(configPath))
-            {
-                throw new ArgumentNullException($"Cannot parse config file: {configPath}");
-            }
+            return LoadConfig(forceReload: false);
+        }
 
-            T result = default;
-
+        public T LoadConfig(bool forceReload)
+        {
             try
             {
-                using FileStream fs = new(configPath, FileMode.Open);
-                using StreamReader sr = new(fs);
-                using JsonTextReader jtr = new(sr);
+                if (forceReload || null == config)
+                {
+                    string jsonString = File.ReadAllText(configPath);
 
-                var serializer = JsonSerializer.CreateDefault();
-                result = serializer.Deserialize<T>(jtr);
+                    JsonSerializerOptions options = new()
+                    {
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+
+                    config = JsonSerializer.Deserialize<T>(jsonString, options); 
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new FileLoadException(ex.Message);
+                throw new FileLoadException($"Loading configuration file <<{configPath}>> failed.");
             }
 
-            return result;
+            return config;
         }
 
     }
