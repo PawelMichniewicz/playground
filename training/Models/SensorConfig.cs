@@ -1,4 +1,6 @@
-﻿namespace Training.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Training.Models
 {
     public class SensorConfig
     {
@@ -10,6 +12,7 @@
 
         public int MaxValue { get; set; }
 
+        [JsonPropertyName("EncoderType")]
         public string Encoder { get; set; }
 
         public int Frequency { get; set; }

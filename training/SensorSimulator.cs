@@ -64,13 +64,12 @@ namespace Training
                 System.Threading.Thread.Sleep(rest);
             }
 
-            // notify complete()
-            //Complete();
+            Complete();
         }
 
         private void Complete()
         {
-            foreach (var ob in observers)
+            foreach (var ob in observers.ToArray())
             {
                 ob.OnCompleted();
             }

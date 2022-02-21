@@ -11,7 +11,6 @@ namespace Training
     public class Orchestrator
     {
         private readonly List<SensorSimulator> simulators = new();
-        private readonly List<Receiver> receivers = new();
 
         private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
         private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
@@ -37,8 +36,6 @@ namespace Training
                 RunReceivers();
 
                 await Task.WhenAll(simulators.Select(x => x.Worker));
-
-                UnsubscribeReceivers();
             }
             catch (FileLoadException ex)
             {
@@ -46,15 +43,7 @@ namespace Training
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Operation failed unexpectedly! Message: {ex.Message}.");
-            }
-        }
-
-        private void UnsubscribeReceivers()
-        {
-            foreach (var rx in receivers)
-            {
-                rx.UnsubscribeMe();
+                Console.WriteLine($"Operation failed unexpectedly! Message: {ex.Message}");
             }
         }
 
@@ -78,7 +67,6 @@ namespace Training
                 {
                     Receiver rx = new(recConfig, decoder);
                     rx.Unsubscriber = simulators.FirstOrDefault(x => x.Config.ID == recConfig.SimulatorID)?.Subscribe(rx);
-                    receivers.Add(rx);
                 }
             }
         }

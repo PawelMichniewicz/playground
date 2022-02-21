@@ -18,7 +18,7 @@ namespace Training
             this.decoder = decoder;
         }
 
-        public void UnsubscribeMe() => Unsubscriber?.Dispose();
+        private void UnsubscribeMe() => Unsubscriber?.Dispose();
 
         public void OnCompleted()
         {
