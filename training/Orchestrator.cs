@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Training.Interfaces;
 using Training.Models;
+using Training.Utils;
 
 namespace Training
 {
     public class Orchestrator
     {
-        private readonly List<SensorSimulator> simulators = new();
+        private readonly List<SensorSimulator> simulators;
+        private readonly ConfigurationManager configMgr;
 
         private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
         private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
@@ -18,10 +20,13 @@ namespace Training
         private readonly IEncoder<Telegram> encoder;
         private readonly IDecoder<Telegram> decoder;
 
-        public Orchestrator(IConfigProvider<SensorConfigFile> simConfig, IConfigProvider<ReceiverConfigFile> rxConfig)
+        public Orchestrator()
         {
-            simulatorConfig = simConfig;
-            receiverConfig = rxConfig;
+            simulators = new();
+            configMgr = new();
+
+            simulatorConfig = configMgr.SensorConfig;
+            receiverConfig = configMgr.ReceiverConfig;
 
             encoder = new TelegramEncoder();
             decoder = new TelegramDecoder();

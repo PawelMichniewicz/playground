@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Training.Utils;
 
 namespace Training
 {
@@ -7,9 +6,7 @@ namespace Training
     {
         public static async Task Main()
         {
-            ConfigurationManager configMgr = new();
-
-            await new Orchestrator(configMgr.SensorConfig, configMgr.ReceiverConfig).Go();
+            await new Orchestrator().Go();
         }
     }
 }
