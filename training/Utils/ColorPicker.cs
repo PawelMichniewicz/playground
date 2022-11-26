@@ -1,7 +1,7 @@
 ﻿using System;
-using Training.Models;
+using TelegramFLow.Models;
 
-namespace Training.Utils
+namespace TelegramFLow.Utils
 {
     public static class ColorPicker
     {

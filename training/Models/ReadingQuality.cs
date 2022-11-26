@@ -1,4 +1,4 @@
-﻿namespace Training.Models
+﻿namespace TelegramFLow.Models
 {
     public enum ReadingQuality
     {

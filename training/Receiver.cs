@@ -1,9 +1,9 @@
 ﻿using System;
-using Training.Interfaces;
-using Training.Models;
-using Training.Utils;
+using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
+using TelegramFLow.Utils;
 
-namespace Training
+namespace TelegramFLow
 {
     public class Receiver : IObserver<string>
     {

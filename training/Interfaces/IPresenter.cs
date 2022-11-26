@@ -1,6 +1,6 @@
-﻿using Training.Models;
+﻿using TelegramFLow.Models;
 
-namespace Training.Interfaces
+namespace TelegramFLow.Interfaces
 {
     public  interface IPresenter
     {

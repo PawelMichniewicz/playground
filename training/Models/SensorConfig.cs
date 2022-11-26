@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Training.Models
+namespace TelegramFLow.Models
 {
     public class SensorConfig
     {

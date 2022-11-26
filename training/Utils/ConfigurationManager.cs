@@ -1,8 +1,8 @@
-﻿using Training.Interfaces;
-using Training.Models;
-using Training.Parsers;
+﻿using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
+using TelegramFLow.Parsers;
 
-namespace Training.Utils
+namespace TelegramFLow.Utils
 {
     public class ConfigurationManager
     {

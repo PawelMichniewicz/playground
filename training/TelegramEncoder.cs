@@ -1,7 +1,7 @@
-﻿using Training.Interfaces;
-using Training.Models;
+﻿using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
 
-namespace Training
+namespace TelegramFLow
 {
     public class TelegramEncoder : IEncoder<Telegram>
     {

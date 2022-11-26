@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Training.Interfaces;
-using Training.Models;
-using Training.Utils;
+using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
+using TelegramFLow.Utils;
 
-namespace Training
+namespace TelegramFLow
 {
     public class Orchestrator
     {

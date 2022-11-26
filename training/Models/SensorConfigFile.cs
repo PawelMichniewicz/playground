@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Training.Models
+namespace TelegramFLow.Models
 {
     public class SensorConfigFile
     {

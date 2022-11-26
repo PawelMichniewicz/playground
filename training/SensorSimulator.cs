@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Training.Interfaces;
-using Training.Models;
-using Training.Utils;
+using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
+using TelegramFLow.Utils;
 
-namespace Training
+namespace TelegramFLow
 {
     public class SensorSimulator : IObservable<string>
     {

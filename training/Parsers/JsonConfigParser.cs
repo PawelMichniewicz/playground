@@ -2,9 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using Training.Interfaces;
+using TelegramFLow.Interfaces;
 
-namespace Training.Parsers
+namespace TelegramFLow.Parsers
 {
     public class JsonConfigParser<T> : IConfigProvider<T> where T : class
     {

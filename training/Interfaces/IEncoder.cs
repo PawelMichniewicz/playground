@@ -1,4 +1,4 @@
-﻿namespace Training.Interfaces
+﻿namespace TelegramFLow.Interfaces
 {
     public interface IEncoder<T>
     {

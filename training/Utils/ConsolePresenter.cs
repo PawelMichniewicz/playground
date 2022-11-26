@@ -1,8 +1,8 @@
 ﻿using System;
-using Training.Interfaces;
-using Training.Models;
+using TelegramFLow.Interfaces;
+using TelegramFLow.Models;
 
-namespace Training.Utils
+namespace TelegramFLow.Utils
 {
     public class ConsolePresenter : IPresenter
     {
