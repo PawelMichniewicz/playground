@@ -11,25 +11,19 @@ namespace Training
 {
     public class Orchestrator
     {
-        private readonly List<SensorSimulator> simulators;
-        private readonly ConfigurationManager configMgr;
+        private readonly List<SensorSimulator> simulators = new();
+        private readonly ConfigurationManager configMgr = new();
+
+        private readonly IEncoder<Telegram> encoder = new TelegramEncoder();
+        private readonly IDecoder<Telegram> decoder = new TelegramDecoder();
 
         private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
         private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
 
-        private readonly IEncoder<Telegram> encoder;
-        private readonly IDecoder<Telegram> decoder;
-
         public Orchestrator()
         {
-            simulators = new();
-            configMgr = new();
-
             simulatorConfig = configMgr.SensorConfig;
             receiverConfig = configMgr.ReceiverConfig;
-
-            encoder = new TelegramEncoder();
-            decoder = new TelegramDecoder();
         }
 
         public async Task Go()
@@ -37,9 +31,7 @@ namespace Training
             try
             {
                 RunSensors();
-
                 RunReceivers();
-
                 await Task.WhenAll(simulators.Select(x => x.Worker));
             }
             catch (FileLoadException ex)
@@ -55,9 +47,8 @@ namespace Training
         private void RunSensors()
         {
             var config = simulatorConfig.LoadConfig();
-            foreach (var sensorConfig in config.Sensors)
+            foreach (var sim in config.Sensors.Select(c => new SensorSimulator(c, encoder)))
             {
-                SensorSimulator sim = new(sensorConfig, encoder);
                 sim.Start();
                 simulators.Add(sim);
             }
@@ -66,13 +57,9 @@ namespace Training
         private void RunReceivers()
         {
             var config = receiverConfig.LoadConfig();
-            foreach (var recConfig in config.Receivers)
+            foreach (var rx in config.Receivers.Where(c => c.Enabled).Select(c => new Receiver(c, decoder)))
             {
-                if (recConfig.Enabled)
-                {
-                    Receiver rx = new(recConfig, decoder);
-                    rx.Unsubscriber = simulators.FirstOrDefault(x => x.Config.ID == recConfig.SimulatorID)?.Subscribe(rx);
-                }
+                rx.Unsubscriber = simulators.First(x => x.Config.ID == rx.Config.SimulatorID).Subscribe(rx);
             }
         }
     }

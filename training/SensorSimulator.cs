@@ -14,16 +14,17 @@ namespace Training
         private readonly List<IObserver<string>> observers;
         private readonly IEncoder<Telegram> encoder;
 
-        public SensorConfig Config { get; set; }
-
-        public Task Worker { get; private set; }
-
         public SensorSimulator(SensorConfig config, IEncoder<Telegram> encoder)
         {
             this.encoder = encoder;
             Config = config;
             observers = new List<IObserver<string>>();
+            Worker = new Task(SimulationLoop);
         }
+
+        public SensorConfig Config { get; private set; }
+
+        public Task Worker { get; private set; } 
 
         public IDisposable Subscribe(IObserver<string> observer)
         {
@@ -33,14 +34,14 @@ namespace Training
 
         public void Start()
         {
-            (Worker ??= new Task(SimulationLoop)).Start();
+            Worker.Start();
         }
 
         private void SimulationLoop()
         {
             int rest = milisecs / Config.Frequency;
 
-            Random chaos = new();
+            Random rng = new();
             Telegram telegram = new() { ID = Config.ID, Type = Config.Type };
             QualityClassifier classifier = new(Config.MinValue, Config.MaxValue);
 
@@ -49,7 +50,7 @@ namespace Training
             while (end.TimeOfDay > DateTime.Now.TimeOfDay)
             {
                 // 1. get new reading
-                telegram.Reading = chaos.Next(Config.MinValue, Config.MaxValue);
+                telegram.Reading = rng.Next(Config.MinValue, Config.MaxValue);
 
                 // 2. decide quality
                 telegram.Quality = classifier.Clasify(telegram.Reading);
@@ -61,7 +62,7 @@ namespace Training
                 Notify(encoded);
 
                 // 5. wait to be inline with reading frequency
-                System.Threading.Thread.Sleep(rest);
+                Task.Delay(rest).Wait();
             }
 
             Complete();
@@ -69,7 +70,7 @@ namespace Training
 
         private void Complete()
         {
-            foreach (var ob in observers.ToArray())
+            foreach (var ob in observers)
             {
                 ob.OnCompleted();
             }
