@@ -20,6 +20,8 @@ namespace Training
         private readonly IConfigProvider<SensorConfigFile> simulatorConfig;
         private readonly IConfigProvider<ReceiverConfigFile> receiverConfig;
 
+        private readonly IPresenter presenter = new ConsolePresenter();
+
         public Orchestrator()
         {
             simulatorConfig = configMgr.SensorConfig;
@@ -57,7 +59,7 @@ namespace Training
         private void RunReceivers()
         {
             var config = receiverConfig.LoadConfig();
-            foreach (var rx in config.Receivers.Where(c => c.Enabled).Select(c => new Receiver(c, decoder)))
+            foreach (var rx in config.Receivers.Where(c => c.Enabled).Select(c => new Receiver(c, decoder, presenter)))
             {
                 rx.Unsubscriber = simulators.First(x => x.Config.ID == rx.Config.SimulatorID).Subscribe(rx);
             }

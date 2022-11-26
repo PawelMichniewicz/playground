@@ -70,7 +70,8 @@ namespace Training
 
         private void Complete()
         {
-            foreach (var ob in observers)
+            // ToArray() is required to work on a copy
+            foreach (var ob in observers.ToArray())
             {
                 ob.OnCompleted();
             }

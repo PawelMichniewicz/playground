@@ -8,11 +8,13 @@ namespace Training
     public class Receiver : IObserver<string>
     {
         private readonly IDecoder<Telegram> decoder;
+        private readonly IPresenter presenter;
 
-        public Receiver(ReceiverConfig config, IDecoder<Telegram> decoder)
+        public Receiver(ReceiverConfig config, IDecoder<Telegram> decoder, IPresenter presenter)
         {
             Config = config;
             this.decoder = decoder;
+            this.presenter = presenter;
         }
 
         public IDisposable? Unsubscriber { get; set; }
@@ -33,11 +35,7 @@ namespace Training
 
         public void OnNext(string value)
         {
-            Telegram telegram = decoder.Decode(value);
-
-            Console.ForegroundColor = ColorPicker.ColorFromQuality(telegram.Quality);
-            Console.WriteLine($"Receiver #{Config.ID} got telegram:\tID: {telegram.ID}\ttype: {telegram.Type}\treading: {telegram.Reading}\tquality: {telegram.Quality}");
-            Console.ForegroundColor = ColorPicker.DefaultColor;
+            presenter.Show(decoder.Decode(value));
         }
     }
 }
