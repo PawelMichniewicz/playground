@@ -12,7 +12,9 @@
         static void Main(string[] args)
         {
             LongArray temp = new LongArray(10);
-            temp.Foo();
+            Console.WriteLine(temp.DifferenceOfSums());
+
+            Console.WriteLine(temp.IndexJumping());
         }
     }
 }

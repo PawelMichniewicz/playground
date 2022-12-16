@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramFlow", "training\TelegramFlow.csproj", "{E159F0DE-6E35-4C67-8979-C8210BCA71C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MissingElement", "MissingElement\MissingElement.csproj", "{E1BE7D24-ECF2-43E2-95C3-E719214F28BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MissingElement", "MissingElement\MissingElement.csproj", "{E1BE7D24-ECF2-43E2-95C3-E719214F28BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MissingElement.Test", "MissingElement.Test\MissingElement.Test.csproj", "{66EF4931-1FB7-4778-ACE9-C3F8641A937E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E1BE7D24-ECF2-43E2-95C3-E719214F28BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1BE7D24-ECF2-43E2-95C3-E719214F28BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1BE7D24-ECF2-43E2-95C3-E719214F28BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66EF4931-1FB7-4778-ACE9-C3F8641A937E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66EF4931-1FB7-4778-ACE9-C3F8641A937E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66EF4931-1FB7-4778-ACE9-C3F8641A937E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66EF4931-1FB7-4778-ACE9-C3F8641A937E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

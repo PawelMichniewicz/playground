@@ -1,33 +1,71 @@
 ﻿namespace MissingElement
 {
-    internal class LongArray//<T> where T : IComparable
+    public class LongArray
     {
         private readonly int size;
         private readonly int min;
         private readonly int max;
         private int[] collection;
 
-        public LongArray(int maxValue)
+        public LongArray(int maxValue) : this(maxValue, Array.Empty<int>())
         {
-            min = 1;
-            max = maxValue;
-            this.size = maxValue - 1;
-
             Random rng = new(DateTime.Now.Microsecond);
             collection = Enumerable.Range(min, max).OrderBy(x => rng.Next()).Take(size).ToArray();
         }
 
-        public void Foo()
+        public LongArray(int maxValue, int[] collection)
         {
-            int i = 0;
+            min = 1;
+            max = maxValue;
+            size = maxValue - 1;
+
+            this.collection = collection;
+        }
+
+        public int DifferenceOfSums()
+        {
+            long sumInCollection = collection.Select(x => (long)x).Sum();
+            long sumOfRange = (min + max) * max / 2;
+
+            print();
+
+            return (int)(sumOfRange - sumInCollection);
+        }
+
+        public int IndexJumping()
+        {
+            int result = max;
+            int j = 0;
             int t = 1;
-            do
+
+            bool maxPresent = false;
+
+            for (int i = 0; i < size; i++)
             {
-                print();
-                t = collection[i];
-                collection[i] = i + 1;
-                i = t - 1;
-            } while (true);
+                j = i;
+                if (maxPresent)
+                {
+                    
+                }
+                else
+                {
+
+                }
+                while (collection[j] != j + 1)
+                {
+                    //print();
+                    t = collection[j];
+                    collection[j] = j + 1;
+                    j = t - 1;
+                    if (collection[j] == max)
+                    {
+                        maxPresent = true;
+                        break;
+                    }
+                };
+            }
+
+            return result;
         }
 
         private void print()
